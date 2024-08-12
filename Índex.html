@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Corte</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #444;
+        }
+
+        .button {
+            width: 120px;
+            height: 50px;
+            font-size: 18px;
+            margin: 10px;
+            border: 2px solid #444;
+            background-color: #fff;
+            color: #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+
+        .button:hover {
+            background-color: #444;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            transform: scale(1);
+        }
+
+        #customValue {
+            width: 120px;
+            height: 50px;
+            font-size: 18px;
+            margin: 10px;
+            text-align: center;
+            border: 2px solid #444;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #customValue:focus {
+            border-color: #888;
+        }
+
+        .result {
+            width: 300px;
+            height: 50px;
+            margin: 20px auto;
+            font-size: 20px;
+            line-height: 50px;
+            border: 2px solid #444;
+            background-color: #fff;
+            border-radius: 8px;
+            color: #444;
+        }
+
+        #resetButton {
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff5c5c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        #resetButton:hover {
+            background-color: #e04a4a;
+        }
+
+        #themeToggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #history {
+            margin-top: 40px;
+            font-size: 18px;
+            text-align: left;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+    
+    <h1>Novo corte</h1>
+
+    <button class="button" onclick="addToTotal(18)">R$ 18</button>
+    <button class="button" onclick="addToTotal(20)">R$ 20</button>
+    <br>
+    <button class="button" onclick="addToTotal(15)">R$ 15</button>
+    <input type="number" id="customValue" placeholder="R$" />
+    <button class="button" onclick="addCustomValue()">&#9998;</button>
+    <br>
+    <div id="totalResult" class="result">O total é de: R$ 0.00</div>
+    <div id="commissionResult" class="result">A comissão é: R$ 0.00</div>
+    <button id="resetButton" onclick="resetTotal()">Reset</button>
+
+    <div id="history">
+        <h3>Histórico:</h3>
+        <ul id="historyList"></ul>
+    </div>
+
+    <script>
+        let total = 0;
+        let history = [];
+
+        function addToTotal(amount) {
+            total += amount;
+            const timestamp = new Date().toLocaleString();
+            history.push(`Adicionado: R$ ${amount.toFixed(2)} em ${timestamp}`);
+            updateResults();
+        }
+
+        function addCustomValue() {
+            const customValue = parseFloat(document.getElementById('customValue').value);
+            if (!isNaN(customValue)) {
+                total += customValue;
+                const timestamp = new Date().toLocaleString();
+                history.push(`Adicionado: R$ ${customValue.toFixed(2)} em ${timestamp}`);
+                document.getElementById('customValue').value = '';
+                updateResults();
+            }
+        }
+
+        function updateResults() {
+            document.getElementById('totalResult').innerText = `O total é de: R$ ${total.toFixed(2)}`;
+            document.getElementById('commissionResult').innerText = `A comissão é: R$ ${(total * 0.15).toFixed(2)}`;
+            updateHistory();
+        }
+
+        function resetTotal() {
+            total = 0;
+            const timestamp = new Date().toLocaleString();
+            history.push(`Reset total em ${timestamp}`);
+            updateResults();
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                historyList.appendChild(li);
+            });
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const isLight = body.style.backgroundColor === '#f2f2f2' || body.style.backgroundColor === '';
+
+            if (isLight) {
+                body.style.backgroundColor = '#333333';
+                body.style.color = '#f2f2f2';
+                document.getElementById('themeToggle').innerText = '☀️';
+            } else {
+                body.style.backgroundColor = '#f2f2f2';
+                body.style.color = '#333';
+                document.getElementById('themeToggle').innerText = '🌙';
+            }
+        }
+    </script>
+
+</body>
+</html>
